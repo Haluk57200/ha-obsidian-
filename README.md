@@ -127,3 +127,9 @@ sensor.system_monitor_memory_use_percent   # → RAM %
 ---
 
 *Made with ❤️ and Home Assistant*
+
+## ☕ Soutenir le projet
+
+Si ce projet t'aide et que tu veux soutenir son développement :
+
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
