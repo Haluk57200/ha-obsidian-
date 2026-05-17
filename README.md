@@ -133,3 +133,9 @@ sensor.system_monitor_memory_use_percent   # → RAM %
 Si ce projet t'aide et que tu veux soutenir son développement :
 
 [![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
+
+## ☕ Soutenir le projet
+
+Si ce projet t'aide et que tu veux soutenir son développement :
+
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
