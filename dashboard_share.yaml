@@ -1,0 +1,887 @@
+##############################################################
+# DASHBOARD - Clone Mattias Premium v8 - FINAL ÉPURÉ v3
+# Changements vs original :
+#   - mattiaslighttile : tap=more-info, hold=toggle, label=% luminosité
+#   - Cuisine : corrigé (tapaction more-info)
+#   - Section Loisirs : SUPPRIMÉE, structure chambre identique à l'original
+#   - Contraste actif/inactif renforcé (fond + bordure + glow + opacité)
+#   - Tuiles inactives plus sombres pour mieux différencier
+##############################################################
+
+title: Clone Mattias Premium v8 Media Hero
+
+button_card_templates:
+
+  # ── Titre de section ─────────────────────────────────────
+  mattiassectiontitle:
+    show_icon: false
+    show_name: true
+    show_label: true
+    styles:
+      card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - padding: 0 0 9px 5px
+        - height: auto
+      name:
+        - color: rgba(255,255,255,0.98)
+        - font-size: 24px
+        - font-weight: 900
+        - letter-spacing: -1px
+        - justify-self: start
+        - text-shadow: 0 2px 18px rgba(0,0,0,0.55)
+      label:
+        - color: rgba(255,255,255,0.48)
+        - font-size: 10px
+        - font-weight: 800
+        - letter-spacing: 1.45px
+        - text-transform: uppercase
+        - justify-self: start
+        - margin-top: 2px
+
+  # ── Tuile générique ──────────────────────────────────────
+  mattiastile:
+    show_icon: true
+    show_name: true
+    show_label: true
+    label: |
+      [[[
+        if (!entity) return 'Indisponible';
+        const s = entity.state;
+        if (['on','playing','home'].includes(s)) return 'Activé';
+        if (s === 'off') return 'Désactivé';
+        if (s === 'idle') return 'Au repos';
+        if (s === 'paused') return 'Pause';
+        if (s === 'unavailable') return 'Indispo';
+        if (s === 'unknown') return 'Inconnu';
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      ]]]
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    styles:
+      card:
+        - position: relative
+        - height: 104px
+        - border-radius: 23px
+        - padding: 16px
+        - overflow: hidden
+        # INACTIF : fond plus sombre + opacité réduite pour mieux contraster
+        - background: linear-gradient(145deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.03) 47%,rgba(255,255,255,0.015) 100%)
+        - border: 1px solid rgba(255,255,255,0.07)
+        - box-shadow: >
+            inset 0 1px 0 rgba(255,255,255,0.10),
+            0 2px 6px rgba(0,0,0,0.18),
+            0 8px 20px rgba(0,0,0,0.28)
+        - backdrop-filter: blur(28px) saturate(200%) brightness(1.04)
+        - -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(1.04)
+        - transition: transform 0.18s cubic-bezier(.25,.46,.45,.94),box-shadow 0.18s ease
+      grid:
+        - position: relative
+        - z-index: 2
+        - grid-template-areas: '"i n" "i l"'
+        - grid-template-columns: 42px 1fr
+        - grid-template-rows: 1fr 1fr
+        - column-gap: 11px
+        - align-items: center
+      icon:
+        - width: 23px
+        # INACTIF : icône très atténuée
+        - color: "[[[ return variables.iconcolor ? `#${variables.iconcolor}55` : 'rgba(255,255,255,0.30)' ]]]"
+        - filter: none
+      img_cell:
+        - width: 40px
+        - height: 40px
+        - border-radius: 50%
+        # INACTIF : fond icône quasi invisible
+        - background: rgba(255,255,255,0.05)
+        - align-self: center
+        - justify-self: center
+      name:
+        - justify-self: start
+        - align-self: end
+        # INACTIF : nom atténué
+        - color: rgba(255,255,255,0.50)
+        - font-size: 12px
+        - font-weight: 900
+        - line-height: 13px
+        - text-shadow: none
+      label:
+        - justify-self: start
+        - align-self: start
+        - color: rgba(255,255,255,0.28)
+        - font-size: 10.2px
+        - font-weight: 800
+        - line-height: 12px
+    state:
+      - operator: template
+        value: "[[[ return !entity ? false : ['on','playing','home'].includes(entity.state) ]]]"
+        styles:
+          card:
+            # ACTIF : fond lumineux bien visible, bordure colorée, glow fort
+            - background: >
+                radial-gradient(ellipse at 18% 10%,rgba(255,255,255,0.10),transparent 52%),
+                linear-gradient(145deg,rgba(255,255,255,0.15) 0%,rgba(255,255,255,0.08) 46%,rgba(255,255,255,0.04) 100%)
+            - border: 1px solid rgba(255,255,255,0.30)
+            - box-shadow: >
+                inset 0 1px 0 rgba(255,255,255,0.30),
+                0 4px 8px rgba(0,0,0,0.14),
+                0 12px 32px rgba(0,0,0,0.26),
+                0 0 0 1px rgba(255,255,255,0.08)
+          name:
+            # ACTIF : nom bien blanc et net
+            - color: rgba(255,255,255,1)
+            - text-shadow: 0 2px 12px rgba(0,0,0,0.45)
+          label:
+            - color: rgba(255,255,255,0.72)
+          icon:
+            # ACTIF : icône colorée pleine + glow
+            - color: "[[[ return variables.iconcoloractive ? `#${variables.iconcoloractive}` : variables.iconcolor ? `#${variables.iconcolor}` : 'rgba(255,255,255,0.95)' ]]]"
+            - filter: >
+                [[[
+                  const c = variables.iconcoloractive || variables.iconcolor || 'fff';
+                  return `drop-shadow(0 0 14px #${c}DD)`;
+                ]]]
+          img_cell:
+            # ACTIF : fond icône coloré plein
+            - background: "[[[ return variables.iconbgactive || variables.iconbg || 'rgba(255,255,255,0.14)' ]]]"
+    extra_styles: |
+      .card::after {
+        content:''; position:absolute; top:-66%; left:-90%;
+        width:52%; height:232%; transform:rotate(28deg);
+        background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+        opacity:.28; pointer-events:none; z-index:1;
+        transition:left .65s cubic-bezier(.25,.46,.45,.94);
+      }
+      .card:hover { transform:translateY(-2px) scale(1.008); }
+      .card:hover::after { left:128%; }
+      .card:active { transform:scale(0.962) translateY(1px) !important; }
+
+  # ── Tuile lumière avec % de luminosité ──────────────────
+  # tap = more-info (ouvre le slider), hold = toggle
+  mattiaslighttile:
+    template: mattiastile
+    tap_action:
+      action: more-info
+    hold_action:
+      action: toggle
+    label: |
+      [[[
+        if (!entity) return 'Indisponible';
+        if (entity.state === 'off') return 'Éteint';
+        if (entity.state === 'unavailable') return 'Indispo';
+        const b = entity.attributes?.brightness;
+        if (b !== undefined && b !== null) {
+          return Math.round(b / 2.55) + '%';
+        }
+        return 'Allumé';
+      ]]]
+
+  # ── Scène ────────────────────────────────────────────────
+  mattiasscenetile:
+    template: mattiastile
+    label: Scène
+    tap_action:
+      action: call-service
+      service: scene.turn_on
+      target:
+        entity_id: "[[[ return entity.entity_id ]]]"
+
+  # ── Script ───────────────────────────────────────────────
+  mattiasscripttile:
+    template: mattiastile
+    label: Action
+    tap_action:
+      action: call-service
+      service: script.turn_on
+      target:
+        entity_id: "[[[ return entity.entity_id ]]]"
+
+  # ── Chip bas de page ─────────────────────────────────────
+  mattiasbottomchip:
+    template: mattiastile
+    styles:
+      card:
+        - height: 44px
+        - border-radius: 15px
+        - padding: 5px 9px
+        - background: linear-gradient(145deg,rgba(255,255,255,0.095),rgba(255,255,255,0.042))
+        - border: 1px solid rgba(255,255,255,0.085)
+        - box-shadow: inset 0 1px 0 rgba(255,255,255,0.13),0 4px 10px rgba(0,0,0,0.14)
+        - backdrop-filter: blur(20px) saturate(180%)
+        - -webkit-backdrop-filter: blur(20px) saturate(180%)
+      grid:
+        - grid-template-areas: '"i n" "i l"'
+        - grid-template-columns: 27px 1fr
+        - grid-template-rows: 1fr 1fr
+        - column-gap: 8px
+      img_cell:
+        - width: 24px
+        - height: 24px
+      icon:
+        - width: 15px
+      name:
+        - font-size: 10px
+        - line-height: 11px
+        - font-weight: 900
+      label:
+        - font-size: 9px
+        - line-height: 10px
+        - font-weight: 750
+
+##############################################################
+# VUES
+##############################################################
+
+views:
+  - title: Clone Mattias V8
+    path: clone-mattias
+    icon: mdi:view-dashboard
+
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: 310px minmax(0,1fr)
+      grid-template-rows: calc(100vh - 64px)
+      grid-template-areas: '"sidebar main"'
+      gap: 0px
+      margin: 0px
+      padding: 0px
+      grid-gap: 0px
+
+    card_mod:
+      style: |
+        :host {
+          --clr-bg:
+            radial-gradient(ellipse at 15% 12%, rgba(126,224,181,0.07) 0%, transparent 42%),
+            radial-gradient(ellipse at 85% 10%, rgba(215,166,255,0.055) 0%, transparent 42%),
+            radial-gradient(ellipse at 85% 88%, rgba(124,200,255,0.045) 0%, transparent 40%),
+            radial-gradient(ellipse at 15% 88%, rgba(126,224,181,0.035) 0%, transparent 38%),
+            linear-gradient(145deg,rgba(10,14,20,1) 0%,rgba(8,11,17,1) 35%,rgba(6,9,14,1) 65%,rgba(4,7,11,1) 100%);
+          background: var(--clr-bg) !important;
+          width: 100vw !important;
+          min-height: 100vh !important;
+        }
+        hui-view { --clr-bg: none !important; }
+        ha-more-info-dialog .mdc-dialog__scrim {
+          background: rgba(4,7,12,0.45) !important;
+          backdrop-filter: blur(32px) saturate(180%) brightness(0.65) !important;
+          -webkit-backdrop-filter: blur(32px) saturate(180%) brightness(0.65) !important;
+        }
+        .mdc-dialog .mdc-dialog__surface {
+          background:
+            radial-gradient(ellipse at 15% 12%, rgba(126,224,181,0.045) 0%, transparent 52%),
+            radial-gradient(ellipse at 85% 88%, rgba(124,200,255,0.03) 0%, transparent 50%),
+            linear-gradient(145deg, rgba(12,16,22,1) 0%, rgba(8,11,17,1) 60%, rgba(6,9,14,1) 100%) !important;
+          border: 1px solid rgba(255,255,255,0.10) !important;
+          border-radius: 32px !important;
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.06),
+            0 8px 32px rgba(0,0,0,0.40),
+            0 32px 80px rgba(0,0,0,0.55),
+            inset 0 1px 0 rgba(255,255,255,0.12),
+            inset 0 -1px 0 rgba(0,0,0,0.30) !important;
+          backdrop-filter: none !important;
+          overflow: hidden !important;
+        }
+
+    cards:
+
+      ########################################################
+      # SIDEBAR
+      ########################################################
+      - type: vertical-stack
+        view_layout:
+          grid-area: sidebar
+        card_mod:
+          style: |
+            :host {
+              display: block !important;
+              position: sticky !important;
+              top: 0 !important;
+              align-self: start !important;
+              z-index: 8;
+              height: calc(100vh - 64px) !important;
+              max-height: calc(100vh - 64px) !important;
+              width: 100%;
+              padding: 28px 22px 18px 22px !important;
+              background: transparent !important;
+              box-shadow: none !important;
+              border: none !important;
+              outline: none !important;
+              overflow-y: auto !important;
+              overflow-x: hidden !important;
+              box-sizing: border-box;
+              scrollbar-width: none;
+            }
+            :host::-webkit-scrollbar { display: none; }
+            .root { margin: 0 !important; padding: 0 !important; }
+            .root > * { margin-bottom: 0 !important; }
+            .root ha-card {
+              background: none !important;
+              border: none !important;
+              box-shadow: none !important;
+              border-radius: 0 !important;
+            }
+        cards:
+
+          # ── Horloge / météo / présence ──────────────────
+          - type: custom:button-card
+            show_icon: false
+            show_name: false
+            show_label: false
+            entity: weather.ma_maison
+            tap_action:
+              action: more-info
+            styles:
+              card:
+                - background: none
+                - border: none
+                - box-shadow: none
+                - border-radius: 0
+                - padding: 0
+              grid:
+                - grid-template-areas: '"content"'
+            custom_fields:
+              content: |
+                [[[
+                  const d = new Date();
+                  const heure = d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+                  const jourStr = d.toLocaleDateString('fr-FR',{weekday:'long'});
+                  const dateStr = d.toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
+                  const sem = Math.ceil((d - new Date(d.getFullYear(),0,1)) / 86400000 / 7);
+                  const h = d.getHours();
+                  const hello = h<6?'Bonne nuit 🌙':h<12?'Bonjour ☀️':h<18?'Bonne journée 🏠':h<22?'Bonsoir 🌆':'Bonne nuit 🌙';
+                  const w = states['weather.ma_maison'];
+                  const temp = w?.attributes?.temperature ?? '—';
+                  const cond = w?.state ?? '';
+                  const cmap = {sunny:'Ensoleillé',clear:'Dégagé','clear-night':'Nuit claire',cloudy:'Nuageux','partly-cloudy':'Éclaircies',rainy:'Pluie',pouring:'Forte pluie',snowy:'Neige',fog:'Brouillard',windy:'Vent',lightning:'Orage'};
+                  const condText = cmap[cond] || cond;
+                  const wIcons = ['sunny','clear-night','partly-cloudy','cloudy','rainy','pouring','lightning-rainy','lightning','snowy','snowy-rainy','fog','windy','windy-variant','hail','exceptional'];
+                  const wIcon = wIcons.includes(cond) ? cond.includes('sun')||cond.includes('clear')?'☀️':cond.includes('rain')||cond.includes('pour')?'🌧️':cond.includes('snow')?'❄️':cond.includes('fog')?'🌫️':'🌤️' : '🌤️';
+                  const lights = ['light.salon','light.salon_led','light.cuisine','light.chambre_parents','light.chambre_enfant','light.espace_loisirs','light.bandeaux_led'];
+                  const nbOn = lights.filter(e => states[e]?.state === 'on').length;
+                  const presence = states['person.utilisateur']?.state;
+                  const presText = presence === 'home' ? 'Maison' : presence ? 'Présence : ' + presence : '';
+                  const modeM = states['input_select.mode_maison']?.state;
+                  const div = `<div style="height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03),transparent);margin:14px 0"></div>`;
+                  return `<div style="color:white">
+                    <div style="font-size:68px;font-weight:100;letter-spacing:-5px;line-height:1;color:rgba(255,255,255,0.97);font-feature-settings:'tnum'">${heure}</div>
+                    <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.36);text-transform:capitalize;margin-top:5px">${jourStr}<br>${dateStr}</div>
+                    <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.20);margin-top:2px">Semaine ${sem}</div>
+                    <div style="font-size:17px;font-weight:800;color:rgba(255,255,255,0.88)">${hello}</div>
+                    ${nbOn > 0 ? `<div style="font-size:11.5px;font-weight:700;color:rgba(255,255,255,0.34);margin-top:4px">${nbOn} lumière${nbOn>1?'s':''} allumée${nbOn>1?'s':''}</div>` : ''}
+                    ${presText ? `<div style="font-size:11.5px;font-weight:700;color:rgba(126,224,181,0.58);margin-top:2px">${presText}</div>` : ''}
+                    ${modeM ? `<div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.22);margin-top:2px;text-transform:capitalize">${modeM}</div>` : ''}
+                    ${div}
+                    <div style="font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.26);margin-bottom:7px">Météo</div>
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between">
+                      <div>
+                        <div style="font-size:24px;font-weight:800;color:rgba(255,255,255,0.94)">${temp}°</div>
+                        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.32);margin-top:2px">${condText}</div>
+                      </div>
+                      <div style="font-size:28px;margin-top:2px">${wIcon}</div>
+                    </div>
+                  </div>`;
+                ]]]
+            card_mod:
+              style: "ha-card { background:none!important; border:none!important; box-shadow:none!important; }"
+
+          # ── Agenda ──────────────────────────────────────
+          - type: custom:button-card
+            show_icon: false
+            show_name: false
+            show_label: false
+            entity: calendar.mon_agenda
+            tap_action:
+              action: more-info
+            styles:
+              card:
+                - background: none
+                - border: none
+                - box-shadow: none
+                - border-radius: 0
+                - padding: 8px 0 0 0
+              grid:
+                - grid-template-areas: '"content"'
+            custom_fields:
+              content: |
+                [[[
+                  const cal = states['calendar.mon_agenda'];
+                  const evtMsg = cal?.attributes?.message;
+                  const evtStart = cal?.attributes?.start_time;
+                  let evtDate, evtTime;
+                  if (evtMsg && evtStart) {
+                    const ed = new Date(evtStart);
+                    evtDate = ed.toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'});
+                    evtTime = ed.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+                  }
+                  const div = `<div style="height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03),transparent);margin:14px 0"></div>`;
+                  return `<div style="color:white">
+                    ${div}
+                    <div style="font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.26);margin-bottom:7px">Agenda</div>
+                    <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.86);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${evtMsg || 'Aucun évènement'}</div>
+                    ${evtMsg ? `<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.30);margin-top:3px">${evtDate} ${evtTime}</div>` : ''}
+                  </div>`;
+                ]]]
+            card_mod:
+              style: "ha-card { background:none!important; border:none!important; box-shadow:none!important; }"
+
+          # ── CPU / RAM ────────────────────────────────────
+          - type: custom:button-card
+            show_icon: false
+            show_name: false
+            show_label: false
+            entity: sensor.system_monitor_processor_use
+            tap_action:
+              action: more-info
+            styles:
+              card:
+                - background: none
+                - border: none
+                - box-shadow: none
+                - border-radius: 0
+                - padding: 8px 0 0 0
+              grid:
+                - grid-template-areas: '"content"'
+            custom_fields:
+              content: |
+                [[[
+                  const cpu = parseFloat(states['sensor.system_monitor_processor_use']?.state ?? 0) || 0;
+                  const ram = parseFloat(states['sensor.system_monitor_memory_use_percent']?.state ?? 0) || 0;
+                  const cpuC = cpu>80?'#ff6b6b':cpu>50?'#f6d865':'#7ee0b5';
+                  const ramC = ram>85?'#ff6b6b':ram>65?'#f6d865':'#7cc8ff';
+                  const bar = (val,color,lbl) => `<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">
+                    <span style="font-size:11px;font-weight:900;color:${color};min-width:68px;text-shadow:0 0 8px ${color}40">${lbl}</span>
+                    <div style="flex:1;height:2px;border-radius:99px;background:rgba(255,255,255,0.06)">
+                      <div style="height:100%;width:${Math.min(val,100)}%;background:${color};border-radius:99px;box-shadow:0 0 5px ${color}88"></div>
+                    </div>
+                  </div>`;
+                  const div = `<div style="height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03),transparent);margin:14px 0"></div>`;
+                  return `<div style="color:white">
+                    ${div}
+                    <div style="font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.26);margin-bottom:9px">Système</div>
+                    ${bar(cpu,cpuC,'CPU ' + Math.round(cpu) + '%')}
+                    ${bar(ram,ramC,'RAM ' + Math.round(ram) + '%')}
+                  </div>`;
+                ]]]
+            card_mod:
+              style: "ha-card { background:none!important; border:none!important; box-shadow:none!important; }"
+
+          # ── Solaire ──────────────────────────────────────
+          - type: custom:button-card
+            show_icon: false
+            show_name: false
+            show_label: false
+            entity: sensor.onduleur_puissance
+            tap_action:
+              action: more-info
+            styles:
+              card:
+                - background: none
+                - border: none
+                - box-shadow: none
+                - border-radius: 0
+                - padding: 8px 0 0 0
+              grid:
+                - grid-template-areas: '"content"'
+            custom_fields:
+              content: |
+                [[[
+                  const pac = parseFloat(states['sensor.onduleur_puissance']?.state) || 0;
+                  const kdy = parseFloat(states['sensor.onduleur_production']?.state);
+                  const kwhTxt = Number.isFinite(kdy) ? kdy.toFixed(1) + ' kWh' : '0 kWh';
+                  const solMsg = pac>2000?'Production forte':pac>800?'Production active':pac>0?'Faible luminosité':'Aucune production';
+                  const div = `<div style="height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03),transparent);margin:14px 0"></div>`;
+                  return `<div style="color:white">
+                    ${div}
+                    <div style="font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.26);margin-bottom:7px">Puissance solaire</div>
+                    <div style="display:flex;align-items:flex-end;justify-content:space-between">
+                      <div>
+                        <div style="font-size:28px;font-weight:800;color:rgba(255,255,255,0.94);line-height:1">${Math.round(pac)}<span style="font-size:13px;color:rgba(255,255,255,0.30)"> W</span></div>
+                        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.28);margin-top:3px">${solMsg} · ${kwhTxt}</div>
+                      </div>
+                      <div style="font-size:22px">${pac>0?'☀️':''}</div>
+                    </div>
+                  </div>`;
+                ]]]
+            card_mod:
+              style: "ha-card { background:none!important; border:none!important; box-shadow:none!important; }"
+
+          # ── Graphe solaire ───────────────────────────────
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.onduleur_puissance
+                name: Solaire
+                color: rgba(255,255,255,0.42)
+            hours_to_show: 24
+            points_per_hour: 2
+            line_width: 1.6
+            height: 60
+            decimals: 0
+            show:
+              icon: false
+              name: false
+              state: false
+              labels: false
+              legend: false
+              fill: fade
+              points: false
+            card_mod:
+              style: |
+                ha-card {
+                  background:none!important;
+                  border:none!important;
+                  box-shadow:none!important;
+                  padding:6px 0 0!important;
+                  margin:0!important;
+                }
+
+      ########################################################
+      # MAIN
+      ########################################################
+      - type: custom:layout-card
+        view_layout:
+          grid-area: main
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: 1.6fr 0.66fr 1fr
+          grid-template-rows: auto minmax(306px,1fr) 44px
+          grid-template-areas: |
+            "salon   cuisine  chambre"
+            "media   media    actions"
+            "maison  maison   maison"
+          column-gap: 22px
+          row-gap: 19px
+          padding: 28px 30px 18px 32px
+          margin: 0
+        card_mod:
+          style: |
+            :host {
+              display: block !important;
+              position: relative;
+              z-index: 1;
+              height: calc(100vh - 64px) !important;
+              min-height: calc(100vh - 64px) !important;
+              overflow-y: auto !important;
+              overflow-x: hidden !important;
+              border-radius: 0 !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              background: transparent !important;
+            }
+            .root {
+              position: relative;
+              z-index: 1;
+              min-height: calc(100vh - 64px);
+              align-content: stretch;
+              padding-bottom: 4px;
+            }
+            :host::-webkit-scrollbar { width: 8px; }
+            :host::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 20px; }
+
+        cards:
+
+          # ════════════════════════════════════════════════
+          # SALON  (grid-area: salon)
+          # ════════════════════════════════════════════════
+          - type: vertical-stack
+            view_layout:
+              grid-area: salon
+            cards:
+              - type: custom:button-card
+                template: mattiassectiontitle
+                name: Salon
+                label: Lumière · température
+
+              - type: grid
+                columns: 3
+                square: false
+                card_mod:
+                  style: ":host { --grid-card-gap: 13px; }"
+                cards:
+                  - type: custom:button-card
+                    template: mattiaslighttile
+                    entity: light.salon
+                    name: Salon
+                    icon: mdi:sofa-outline
+                    variables:
+                      iconcolor: "7cc8ff"
+                      iconbg: rgba(124,200,255,0.12)
+                      iconcoloractive: "7cc8ff"
+                      iconbgactive: rgba(124,200,255,0.16)
+
+                  - type: custom:button-card
+                    template: mattiastile
+                    entity: switch.syncbox_synchronisation_des_lumieres
+                    name: Sync Box
+                    icon: mdi:television-ambient-light
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                    variables:
+                      iconcolor: "7ddbd9"
+                      iconbg: rgba(125,219,217,0.12)
+                      iconcoloractive: "7ddbd9"
+                      iconbgactive: rgba(125,219,217,0.16)
+
+                  - type: custom:button-card
+                    template: mattiastile
+                    entity: sensor.maison_zone1_temperature_ambiante
+                    name: Température
+                    icon: mdi:thermometer
+                    tap_action:
+                      action: more-info
+                    hold_action:
+                      action: none
+                    label: |
+                      [[[
+                        if (!entity) return 'Indispo';
+                        const t = entity.attributes?.current_temperature;
+                        return (t !== undefined && t !== null) ? t + '°C' : 'Indispo';
+                      ]]]
+                    variables:
+                      iconcolor: "f6d865"
+                      iconbg: rgba(246,216,101,0.12)
+                      iconcoloractive: "f6d865"
+                      iconbgactive: rgba(246,216,101,0.16)
+
+          # ════════════════════════════════════════════════
+          # CUISINE  (grid-area: cuisine)
+          # ════════════════════════════════════════════════
+          - type: vertical-stack
+            view_layout:
+              grid-area: cuisine
+            cards:
+              - type: custom:button-card
+                template: mattiassectiontitle
+                name: Cuisine
+                label: Lumière cuisine
+
+              - type: grid
+                columns: 1
+                square: false
+                card_mod:
+                  style: ":host { --grid-card-gap: 13px; }"
+                cards:
+                  # ✅ CORRIGÉ : tap=more-info → slider de luminosité accessible
+                  - type: custom:button-card
+                    template: mattiaslighttile
+                    entity: light.cuisine
+                    name: Cuisine
+                    icon: mdi:countertop-outline
+                    variables:
+                      iconcolor: "f3a946"
+                      iconbg: rgba(243,169,70,0.12)
+                      iconcoloractive: "f3a946"
+                      iconbgactive: rgba(243,169,70,0.16)
+
+          # ════════════════════════════════════════════════
+          # CHAMBRE  (grid-area: chambre) — identique à l'original
+          # ════════════════════════════════════════════════
+          - type: vertical-stack
+            view_layout:
+              grid-area: chambre
+            cards:
+              - type: custom:button-card
+                template: mattiassectiontitle
+                name: Chambre
+                label: Lumière parents · enfant
+
+              - type: grid
+                columns: 2
+                square: false
+                card_mod:
+                  style: ":host { --grid-card-gap: 13px; }"
+                cards:
+                  - type: custom:button-card
+                    template: mattiaslighttile
+                    entity: light.chambre_parents
+                    name: Parentale
+                    icon: mdi:bed-queen-outline
+                    variables:
+                      iconcolor: "b9b0ff"
+                      iconbg: rgba(185,176,255,0.12)
+                      iconcoloractive: "b9b0ff"
+                      iconbgactive: rgba(185,176,255,0.16)
+
+                  - type: custom:button-card
+                    template: mattiaslighttile
+                    entity: light.chambre_enfant
+                    name: Enfant
+                    icon: mdi:baby-face-outline
+                    variables:
+                      iconcolor: "7ee0b5"
+                      iconbg: rgba(126,224,181,0.12)
+                      iconcoloractive: "7ee0b5"
+                      iconbgactive: rgba(126,224,181,0.16)
+
+          # ════════════════════════════════════════════════
+          # MÉDIA  (grid-area: media)
+          # ════════════════════════════════════════════════
+          - type: vertical-stack
+            view_layout:
+              grid-area: media
+            card_mod:
+              style: |
+                ha-card { background: none !important; border: none !important; box-shadow: none !important; }
+            cards:
+              - type: custom:button-card
+                template: mattiassectiontitle
+                name: Média
+                label: TV · TiviMate · Musique · Tidal · Multiroom
+
+              - type: custom:media-premium-player-v9-4-1
+                modeselect: input_select.mode_media
+                musicplayerselect: input_select.lecteur_musique
+                searchtext: input_text.recherche_musique
+                searchtype: input_select.type_de_recherche_musique
+                denonplayer: media_player.ampli_hifi
+                cuisineplayer: media_player.enceinte_cuisine
+                maisonplayer: media_player.multiroom
+                denonpowerplayer: media_player.ampli_hifi_2
+                scriptlaunch: script.media_lancer_tidal
+                scriptradio: script.media_radio_tidal
+                scripttransfer: script.media_transferer_musique
+                shieldplayer: media_player.android_tv_192_168_1_19
+                plexplayer: media_player.plex_plex_for_android_tv_shield_android_tv
+                tivichannel: input_text.tivimate_chaine
+                tiviprogram: input_text.tivimate_programme
+                tivitime: input_text.tivimate_horaire
+                tividuration: input_text.tivimate_duree
+                tividescription: input_text.tivimate_description
+                tivilogo: input_text.tivimate_logo
+                vodtitre: input_text.tmdb_titre
+                vodsoustitre: input_text.tmdb_soustitre
+                vodjaquette: input_text.tmdb_poster
+                voddescription: input_text.tmdb_description
+                vodannee: input_text.tmdb_annee
+                vodnote: input_text.tmdb_note
+
+          # ════════════════════════════════════════════════
+          # ACTIONS  (grid-area: actions)
+          # ════════════════════════════════════════════════
+          - type: vertical-stack
+            view_layout:
+              grid-area: actions
+            cards:
+              - type: custom:button-card
+                template: mattiassectiontitle
+                name: Actions
+                label: Automatismes rapides
+
+              - type: grid
+                columns: 2
+                square: false
+                card_mod:
+                  style: ":host { --grid-card-gap: 13px; }"
+                cards:
+                  - type: custom:button-card
+                    template: mattiastile
+                    entity: input_boolean.portail_auto_actif
+                    name: Portail auto
+                    icon: mdi:gate
+                    variables:
+                      iconcolor: "7ee0b5"
+                      iconbg: rgba(126,224,181,0.12)
+                      iconcoloractive: "7ee0b5"
+                      iconbgactive: rgba(126,224,181,0.16)
+
+                  - type: custom:button-card
+                    template: mattiastile
+                    entity: input_boolean.garage_auto_actif
+                    name: Garage auto
+                    icon: mdi:garage-variant
+                    variables:
+                      iconcolor: "7cc8ff"
+                      iconbg: rgba(124,200,255,0.12)
+                      iconcoloractive: "7cc8ff"
+                      iconbgactive: rgba(124,200,255,0.16)
+
+                  - type: custom:button-card
+                    template: mattiastile
+                    entity: input_boolean.mode_soiree
+                    name: Mode soirée
+                    icon: mdi:party-popper
+                    variables:
+                      iconcolor: "d7a6ff"
+                      iconbg: rgba(215,166,255,0.12)
+                      iconcoloractive: "d7a6ff"
+                      iconbgactive: rgba(215,166,255,0.16)
+
+                  - type: custom:button-card
+                    template: mattiastile
+                    entity: input_boolean.mode_film_enfant
+                    name: Film enfant
+                    icon: mdi:movie-open-play
+                    variables:
+                      iconcolor: "ff8fb3"
+                      iconbg: rgba(255,143,179,0.12)
+                      iconcoloractive: "ff8fb3"
+                      iconbgactive: rgba(255,143,179,0.16)
+
+          # ════════════════════════════════════════════════
+          # MAISON  (grid-area: maison — chips bas de page)
+          # ════════════════════════════════════════════════
+          - type: grid
+            view_layout:
+              grid-area: maison
+            columns: 3
+            square: false
+            card_mod:
+              style: |
+                :host {
+                  align-self: end !important;
+                  --grid-card-gap: 12px;
+                }
+            cards:
+              - type: custom:button-card
+                template: mattiasbottomchip
+                entity: person.utilisateur
+                name: Utilisateur
+                icon: mdi:account
+                tap_action:
+                  action: more-info
+                label: |
+                  [[[
+                    return entity?.state === 'home' ? 'Maison' : entity?.state || 'Indispo';
+                  ]]]
+                variables:
+                  iconcolor: "7ee0b5"
+                  iconbg: rgba(126,224,181,0.12)
+                  iconcoloractive: "7ee0b5"
+                  iconbgactive: rgba(126,224,181,0.16)
+
+              - type: custom:button-card
+                template: mattiasbottomchip
+                entity: person.utilisateur2
+                name: Utilisateur2
+                icon: mdi:account
+                tap_action:
+                  action: more-info
+                label: |
+                  [[[
+                    return entity?.state === 'home' ? 'Maison' : entity?.state || 'Indispo';
+                  ]]]
+                variables:
+                  iconcolor: "ff8fb3"
+                  iconbg: rgba(255,143,179,0.12)
+                  iconcoloractive: "ff8fb3"
+                  iconbgactive: rgba(255,143,179,0.16)
+
+              - type: custom:button-card
+                template: mattiasbottomchip
+                entity: input_boolean.ecole_de_main
+                name: École
+                icon: mdi:school
+                label: |
+                  [[[
+                    return entity?.state === 'on' ? 'Demain' : 'Repos';
+                  ]]]
+                variables:
+                  iconcolor: "f6d865"
+                  iconbg: rgba(246,216,101,0.12)
+                  iconcoloractive: "f6d865"
+                  iconbgactive: rgba(246,216,101,0.16)
