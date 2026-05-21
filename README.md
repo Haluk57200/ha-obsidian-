@@ -180,8 +180,12 @@ Installe ces intégrations via [HACS](https://hacs.xyz) si ce n'est pas déjà f
 - 🕑 Historique de lecture persistant
 - 🎨 Couleur de fond dynamique selon la pochette
 
-### V941 — Mai 2026
-- Version initiale publiée
+### V941 — Avril 2026
+- Lecteur média TV + Musique avec télécommande intégrée
+- Mode multiroom HEOS (Ampli / Cuisine / Maison)
+- Recherche musique via Music Assistant
+- Affichage infos TMDB (films/séries) et TiviMate (TV en direct)
+- Historique de lecture et file d'attente
 
 ---
 
