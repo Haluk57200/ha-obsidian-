@@ -31,156 +31,181 @@
 
 ---
 
-## ✨ Fonctionnalités principales
+## ✨ Ce que fait ce dashboard
 
-### 🎵 Lecteur Média Premium V943 — `media-premium-player-v9-4-1`
+### 🎵 Lecteur Média Premium V943
 
-Carte custom element 100 % JavaScript, sans dépendance tierce.
+Un lecteur tout-en-un pour la musique **et** la TV, directement depuis le dashboard.
 
-**Nouveautés V943 :**
-- ✅ **Fix `config_entry_id` MASS 2.5+** — la lecture via Music Assistant ne rejette plus les appels `play_media`
-- 🔍 **Recherche intelligente avec debounce** — saisie directe dans la barre de recherche : titres, albums, artistes, playlists, radios
-- 📻 **Lancement radio en un clic** — tape directement `Skyrock`, `Europe 2`, `NRJ`… dans la barre de recherche : la suggestion *"Lancer en radio"* apparaît instantanément via Music Assistant (Radio Browser), **sans passer par un script HA**
-- 🎯 **Détection d'intention automatique** — mots-clés radio FR et ambiances (chill, workout, jazz…) déclenchent une suggestion contextuelle
-- 🌟 **Highlighting des résultats** — termes cherchés mis en évidence dans les résultats (couleur par catégorie)
-- 📋 **File d'attente temps réel** — affichage des titres à suivre, gestion via WebSocket MASS avec fallbacks
-- 🎤 **Discover artiste** — suggestions similaires via Last.fm
-- 🕑 **Historique de lecture** — 10 derniers titres écoutés, persistant
-- 🎨 **Ambiance dynamique** — pochette extraite, couleur dominante synchronisée avec le fond
-- 🔊 **Multiroom HEOS** — sélecteur Ampli / Cuisine / Maison, groupage automatique
-- 📺 **Mode TV** — télécommande Shield/Plex intégrée, infos TMDB/TiviMate
+- 📻 **Radios françaises en un mot** — tape `skyrock`, `nrj`, `europe 2`… dans la barre de recherche → la radio démarre instantanément via Music Assistant, sans configuration supplémentaire
+- 🎵 **Recherche musique complète** — titres, albums, artistes, playlists détectés automatiquement
+- 🎨 **Ambiance dynamique** — le fond change de couleur selon la pochette de l'album en cours
+- 📋 **File d'attente** — voir les prochains titres en temps réel
+- 🔊 **Multiroom** — contrôle Ampli salon / Cuisine / Toute la maison
+- 📺 **Télécommande TV** — contrôle Plex/Shield intégré avec infos du film ou de la série
+- 🕑 **Historique** — 10 derniers titres écoutés mémorisés
 
 ### 💡 Lumières
-- Contrôle par pièce (Salon, Cuisine, Chambre)
-- Sélecteur de couleur natif + presets couleurs
-- Slider de luminosité par luminaire
+Contrôle par pièce avec sélecteur de couleur et slider de luminosité.
 
-### 🚪 Automatisations rapides (Actions)
-- Portail, Garage, Mode sommeil, Film enfants, École
+### 🚪 Automatisations rapides
+Portail, Garage, Mode sommeil, Film enfants, École — accessibles en un tap.
 
 ---
 
-## 📁 Structure
+## 🚀 Installation étape par étape
 
-```
-ha-obsidian/
-├── README.md
-├── dashboard_ha-obsidian.yaml         # Configuration Lovelace
-├── screenshots/                       # Captures anonymisées
-└── www/
-    ├── media-premium-player-v943-PUBLIC.js     # ← Carte custom V943
-    ├── media-premium-player-v9-4-1-PUBLIC.js  # ← Carte custom V941
-    ├── agenda.js
-    ├── horloge-meteo.js
-    ├── solaire.js
-    └── systeme.js
-```
+> 💡 **Niveau débutant** — suis les étapes dans l'ordre, ça prend environ 10 minutes.
 
 ---
 
-## 🚀 Installation
+### Étape 1 — Télécharger les fichiers
 
-### 1. Copier les fichiers JS
-
-Dépose les fichiers `www/*.js` dans ton dossier `config/www/` de Home Assistant.
-
-### 2. Déclarer les ressources
-
-Dans **Paramètres → Tableaux de bord → Ressources**, ajoute :
-
-```
-/local/media-premium-player-v943-PUBLIC.js
-```
-Type : **Module JavaScript**
-
-### 3. Configurer la carte
-
-```yaml
-type: custom:media-premium-player-v9-4-1
-mode_select:          input_select.mode_media
-music_player_select:  input_select.lecteur_musique
-search_text:          input_text.recherche_musique
-search_type:          input_select.type_de_recherche_musique
-denon_player:         media_player.ampli_salon_3
-cuisine_player:       media_player.enceinte_cuisine
-maison_player:        media_player.groupe_maison
-denon_power_player:   media_player.ampli_salon_2
-script_launch:        script.media_lancer_musique
-script_radio:         script.media_radio
-script_transfer:      script.media_transferer
-shield_player:        media_player.android_tv_shield
-plex_player:          media_player.plex_shield_tv
-tivi_channel:         input_text.tivimate_chaine
-tivi_program:         input_text.tivimate_programme
-tivi_time:            input_text.tivimate_horaire
-tivi_duration:        input_text.tivimate_duree
-tivi_description:     input_text.tivimate_description
-tivi_logo:            input_text.tivimate_logo
-vod_titre:            input_text.tmdb_titre
-vod_sous_titre:       input_text.tmdb_sous_titre
-vod_jaquette:         input_text.tmdb_poster
-vod_description:      input_text.tmdb_description
-vod_annee:            input_text.tmdb_annee
-vod_note:             input_text.tmdb_note
-```
-
-> **Note :** Adapte les `entity_id` à ton installation. Les noms ci-dessus sont génériques.
+Clique sur le bouton vert **`< > Code`** en haut de cette page → **Download ZIP** → décompresse le fichier.
 
 ---
 
-## 📻 Recherche radio directe
+### Étape 2 — Copier les fichiers JS dans Home Assistant
 
-La barre de recherche reconnaît automatiquement les radios françaises et lance la lecture **directement via Music Assistant → Radio Browser** :
+Tu as deux options :
 
-| Ce que tu tapes | Ce qui se passe |
+**Option A — Via l'addon File Editor (recommandé)**
+1. Dans HA → **Paramètres → Modules complémentaires** → installe **File Editor** si ce n'est pas fait
+2. Ouvre File Editor → navigue jusqu'à `config/www/`
+3. Si le dossier `www` n'existe pas, crée-le
+4. Copie tous les fichiers `.js` du dossier `www/` de ce repo dans `config/www/`
+
+**Option B — Via un accès réseau (Samba/SFTP)**
+1. Monte le partage réseau de ton HA sur ton ordinateur
+2. Copie les fichiers `.js` dans le dossier `www/`
+
+---
+
+### Étape 3 — Déclarer les ressources JavaScript
+
+1. Dans HA → **Paramètres → Tableaux de bord**
+2. Clique sur les **⋮** (3 points) en haut à droite → **Ressources**
+3. Clique **+ Ajouter une ressource** pour chaque fichier JS :
+
+| URL à coller | Type |
 |---|---|
-| `skyrock` | 🔴 Lancer Skyrock en radio |
-| `europe 2` | 🔴 Lancer Europe 2 en radio |
-| `nrj` | 🔴 Lancer NRJ en radio |
-| `fip` | 🔴 Lancer FIP en radio |
-| `chill` | 🎵 Playlist ambiance Chill |
-| `workout` | 🎵 Playlist ambiance Workout |
+| `/local/media-premium-player-v943-PUBLIC.js` | Module JavaScript |
+| `/local/media-premium-player-v9-4-1-PUBLIC.js` | Module JavaScript |
+| `/local/agenda.js` | Module JavaScript |
+| `/local/horloge-meteo.js` | Module JavaScript |
+| `/local/solaire.js` | Module JavaScript |
+| `/local/systeme.js` | Module JavaScript |
+
+4. **Vide le cache** de ton navigateur (Ctrl+Shift+R ou Cmd+Shift+R sur Mac)
 
 ---
 
-## 🔧 Dépendances recommandées (HACS)
+### Étape 4 — Importer le dashboard
 
-| Intégration / Plugin | Rôle |
+1. Dans HA → **Paramètres → Tableaux de bord** → **+ Ajouter un tableau de bord**
+2. Donne-lui un nom (ex: `Obsidian`)
+3. Clique sur **⋮** → **Modifier** → passe en mode **YAML brut**
+4. Copie-colle le contenu du fichier `dashboard_ha-obsidian.yaml`
+5. Clique **Enregistrer**
+
+---
+
+### Étape 5 — Adapter à ton installation
+
+> ⚠️ Les noms d'entités dans ce fichier sont **génériques**. Tu dois les remplacer par les tiens.
+
+Cherche et remplace ces entités dans le YAML par celles de ton HA :
+
+| Entité générique | Ce que tu dois mettre |
 |---|---|
-| [Music Assistant](https://music-assistant.io) | Backend musical (Tidal, Spotify, Radio Browser…) |
-| [ha-fusion](https://github.com/matt8707/ha-fusion) | Thème de dashboard utilisé |
-| TiviMate Companion | Infos chaîne TV en direct |
-| TMDB Integration | Métadonnées films/séries |
-| Last.fm | Suggestions artistes similaires |
+| `media_player.ampli_salon_3` | Ton ampli/enceinte principale |
+| `media_player.enceinte_cuisine` | Ton enceinte cuisine |
+| `media_player.groupe_maison` | Ton groupe multiroom |
+| `media_player.android_tv_shield` | Ton Android TV / Shield |
+| `media_player.plex_shield_tv` | Ton player Plex |
+| `input_select.lecteur_musique` | Ton input_select de sélection de pièce |
+| `input_text.recherche_musique` | Ton input_text de recherche |
+| `script.media_lancer_musique` | Ton script de lancement musique |
+
+Pour trouver tes entités : **Paramètres → Appareils et services → Entités** → recherche par nom.
+
+---
+
+### Étape 6 — Dépendances requises (HACS)
+
+Installe ces intégrations via [HACS](https://hacs.xyz) si ce n'est pas déjà fait :
+
+| À installer | Pourquoi | Lien |
+|---|---|---|
+| **Music Assistant** | Indispensable pour la musique et les radios | [music-assistant.io](https://music-assistant.io) |
+| **ha-fusion** | Thème du dashboard | [GitHub](https://github.com/matt8707/ha-fusion) |
+| **TiviMate Companion** | Infos TV en direct (optionnel) | HACS |
+| **TMDB** | Pochettes films/séries (optionnel) | HACS |
+| **Last.fm** | Suggestions artistes (optionnel) | HACS |
+
+---
+
+## 📻 Utiliser la recherche radio
+
+Une fois installé, dans le lecteur musique :
+
+1. Clique sur l'onglet **🎵 MUSIQUE**
+2. Dans la barre de recherche, tape directement le nom d'une radio :
+
+```
+skyrock     → 🔴 Lancer Skyrock en radio
+europe 2    → 🔴 Lancer Europe 2 en radio
+nrj         → 🔴 Lancer NRJ en radio
+fip         → 🔴 Lancer FIP en radio
+chill       → 🎵 Playlist ambiance Chill
+workout     → 🎵 Playlist ambiance Workout
+```
+
+3. Clique sur la suggestion qui apparaît → **c'est parti !**
+
+> Aucun script HA à créer — Music Assistant s'en charge directement via Radio Browser.
+
+---
+
+## ❓ Problèmes fréquents
+
+**Les cartes n'apparaissent pas / erreur "custom element not found"**
+→ Vérifie que les fichiers JS sont bien dans `config/www/` et que les ressources sont déclarées (Étape 3). Vide le cache.
+
+**La musique ne se lance pas**
+→ Vérifie que Music Assistant est installé et qu'au moins un provider (Tidal, Spotify…) est configuré.
+
+**Les entités sont en rouge / "unavailable"**
+→ Les noms d'entités sont génériques. Remplace-les par les tiens (Étape 5).
 
 ---
 
 ## 📝 Changelog
 
 ### V943 — Mai 2026
-- Fix critique `config_entry_id` pour MASS 2.5+
-- **Recherche radio directe par nom** (sans script) via Music Assistant
-- Amélioration scoring/highlighting des résultats
-- File d'attente multi-méthodes WebSocket + HTTP API MASS
-- Historique lecture persistant (localStorage)
-- Ambiance dynamique couleur pochette
+- ✅ Fix `config_entry_id` pour Music Assistant 2.5+
+- 📻 Recherche radio directe par nom (sans script)
+- 🌟 Highlighting des résultats de recherche
+- 📋 File d'attente multi-méthodes WebSocket + HTTP
+- 🕑 Historique lecture persistant
+- 🎨 Couleur dynamique selon pochette
 
-### V941
+### V941 — Mai 2026
 - Version initiale publiée
 
 ---
 
 ## ☕ Soutenir le projet
 
-Si ce dashboard t'a été utile, tu peux offrir un café ! ☕
+Ce dashboard est gratuit et open-source. Si il t'a été utile, un café est toujours apprécié ! ☕
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
+[![Soutenir sur Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
 
 ---
 
 ## ⚠️ Avertissement
 
-Les `entity_id` présents dans ce dépôt sont **anonymisés**. Remplace-les par tes propres entités HA.
+Les `entity_id` présents dans ce dépôt sont **anonymisés**. Ils ne correspondent pas à une vraie installation — remplace-les par les tiens.
 
 ---
 
