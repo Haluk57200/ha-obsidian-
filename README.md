@@ -2,21 +2,32 @@
 
 > Dashboard Home Assistant ultra-personnalisé avec lecteur média avancé, contrôle TV/Musique multiroom, lumières et automatisations.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
+
 ---
 
 ## 📸 Aperçu
 
-| Lecteur Musique (Tidal/MASS) | Recherche Radio directe |
-|:---:|:---:|
-| ![Musique](screenshots/Capture-decran-2026-05-20-a-00.46.04-anon.jpeg) | ![Radio](screenshots/Capture-decran-2026-05-20-a-00.45.35-anon.jpeg) |
+### Vue principale
+![Dashboard principal](screenshots/dashboard-00.49.12.jpeg)
 
-| File d'attente | Lecteur TV — Série |
-|:---:|:---:|
-| ![Queue](screenshots/Capture-decran-2026-05-20-a-00.47.59-anon.jpeg) | ![TV Série](screenshots/Capture-decran-2026-05-20-a-00.42.55-anon.jpeg) |
+### 🎵 Lecteur Musique — Tidal via Music Assistant
+![Lecteur musique](screenshots/dashboard-00.46.04.jpeg)
 
-| Lecteur TV — Film | Contrôle lumières |
-|:---:|:---:|
-| ![TV Film](screenshots/Capture-decran-2026-05-20-a-00.43.58-anon.jpeg) | ![Lumières](screenshots/Capture-decran-2026-05-20-a-00.54.00-anon.jpeg) |
+### 📻 Recherche radio directe dans la barre de recherche
+![Recherche radio Europe 2](screenshots/dashboard-00.45.35.jpeg)
+
+### 📋 File d'attente temps réel
+![File d'attente](screenshots/dashboard-00.47.59.jpeg)
+
+### 📺 Lecteur TV — Série (Plex)
+![TV Série Euphoria](screenshots/dashboard-00.42.55.jpeg)
+
+### 🎬 Lecteur TV — Film (Plex)
+![TV Film Avatar](screenshots/dashboard-00.43.58.jpeg)
+
+### 💡 Contrôle des lumières
+![Contrôle lumières Salon](screenshots/dashboard-00.54.00.jpeg)
 
 ---
 
@@ -29,7 +40,7 @@ Carte custom element 100 % JavaScript, sans dépendance tierce.
 **Nouveautés V943 :**
 - ✅ **Fix `config_entry_id` MASS 2.5+** — la lecture via Music Assistant ne rejette plus les appels `play_media`
 - 🔍 **Recherche intelligente avec debounce** — saisie directe dans la barre de recherche : titres, albums, artistes, playlists, radios
-- 📻 **Lancement radio en un clic** — tape directement `Skyrock`, `Europe 2`, `NRJ`… dans la barre de recherche : la suggestion *"Lancer en radio"* apparaît instantanément via Music Assistant (Radio Browser)
+- 📻 **Lancement radio en un clic** — tape directement `Skyrock`, `Europe 2`, `NRJ`… dans la barre de recherche : la suggestion *"Lancer en radio"* apparaît instantanément via Music Assistant (Radio Browser), **sans passer par un script HA**
 - 🎯 **Détection d'intention automatique** — mots-clés radio FR et ambiances (chill, workout, jazz…) déclenchent une suggestion contextuelle
 - 🌟 **Highlighting des résultats** — termes cherchés mis en évidence dans les résultats (couleur par catégorie)
 - 📋 **File d'attente temps réel** — affichage des titres à suivre, gestion via WebSocket MASS avec fallbacks
@@ -40,13 +51,11 @@ Carte custom element 100 % JavaScript, sans dépendance tierce.
 - 📺 **Mode TV** — télécommande Shield/Plex intégrée, infos TMDB/TiviMate
 
 ### 💡 Lumières
-
 - Contrôle par pièce (Salon, Cuisine, Chambre)
 - Sélecteur de couleur natif + presets couleurs
 - Slider de luminosité par luminaire
 
 ### 🚪 Automatisations rapides (Actions)
-
 - Portail, Garage, Mode sommeil, Film enfants, École
 
 ---
@@ -56,27 +65,31 @@ Carte custom element 100 % JavaScript, sans dépendance tierce.
 ```
 ha-obsidian/
 ├── README.md
-├── screenshots/                   # Captures anonymisées
-├── www/
-│   └── media-premium-player-v943-anonymized.js   # ← Carte custom à déposer ici
-└── lovelace/
-    └── (configuration YAML à venir)
+├── dashboard_ha-obsidian.yaml         # Configuration Lovelace
+├── screenshots/                       # Captures anonymisées
+└── www/
+    ├── media-premium-player-v943-PUBLIC.js     # ← Carte custom V943
+    ├── media-premium-player-v9-4-1-PUBLIC.js  # ← Carte custom V941
+    ├── agenda.js
+    ├── horloge-meteo.js
+    ├── solaire.js
+    └── systeme.js
 ```
 
 ---
 
 ## 🚀 Installation
 
-### 1. Copier le fichier JS
+### 1. Copier les fichiers JS
 
-Dépose `media-premium-player-v943-anonymized.js` dans ton dossier `config/www/` de Home Assistant.
+Dépose les fichiers `www/*.js` dans ton dossier `config/www/` de Home Assistant.
 
-### 2. Déclarer la ressource
+### 2. Déclarer les ressources
 
 Dans **Paramètres → Tableaux de bord → Ressources**, ajoute :
 
 ```
-/local/media-premium-player-v943-anonymized.js
+/local/media-premium-player-v943-PUBLIC.js
 ```
 Type : **Module JavaScript**
 
@@ -115,6 +128,21 @@ vod_note:             input_text.tmdb_note
 
 ---
 
+## 📻 Recherche radio directe
+
+La barre de recherche reconnaît automatiquement les radios françaises et lance la lecture **directement via Music Assistant → Radio Browser** :
+
+| Ce que tu tapes | Ce qui se passe |
+|---|---|
+| `skyrock` | 🔴 Lancer Skyrock en radio |
+| `europe 2` | 🔴 Lancer Europe 2 en radio |
+| `nrj` | 🔴 Lancer NRJ en radio |
+| `fip` | 🔴 Lancer FIP en radio |
+| `chill` | 🎵 Playlist ambiance Chill |
+| `workout` | 🎵 Playlist ambiance Workout |
+
+---
+
 ## 🔧 Dépendances recommandées (HACS)
 
 | Intégration / Plugin | Rôle |
@@ -127,40 +155,33 @@ vod_note:             input_text.tmdb_note
 
 ---
 
-## 📻 Recherche radio directe
-
-La barre de recherche du lecteur reconnaît automatiquement les noms de radios françaises et lance la lecture **sans passer par un script** :
-
-```
-skyrock  →  🔴 Lancer Skyrock en radio
-europe 2  →  🔴 Lancer Europe 2 en radio
-nrj  →  🔴 Lancer NRJ en radio
-fip  →  🔴 Lancer FIP en radio
-```
-
-La résolution se fait directement via **Music Assistant → Radio Browser**. Inutile de créer une entité radio dans HA.
-
----
-
 ## 📝 Changelog
 
 ### V943 — Mai 2026
 - Fix critique `config_entry_id` pour MASS 2.5+
-- Recherche radio directe par nom (sans script)
+- **Recherche radio directe par nom** (sans script) via Music Assistant
 - Amélioration scoring/highlighting des résultats
 - File d'attente multi-méthodes WebSocket + HTTP API MASS
 - Historique lecture persistant (localStorage)
 - Ambiance dynamique couleur pochette
 
-### V942
-- Version précédente avec script Tidal
+### V941
+- Version initiale publiée
+
+---
+
+## ☕ Soutenir le projet
+
+Si ce dashboard t'a été utile, tu peux offrir un café ! ☕
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
 
 ---
 
 ## ⚠️ Avertissement
 
-Les `entity_id` présents dans ce fichier sont **anonymisés**. Remplace-les par tes propres entités HA.
+Les `entity_id` présents dans ce dépôt sont **anonymisés**. Remplace-les par tes propres entités HA.
 
 ---
 
-*Fait avec ❤️ sous Home Assistant — ha-fusion theme*
+*Fait avec ❤️ sous Home Assistant · Thème [ha-fusion](https://github.com/matt8707/ha-fusion)*
