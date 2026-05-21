@@ -2,8 +2,6 @@
 
 > Dashboard Home Assistant ultra-personnalisé avec lecteur média avancé, contrôle TV/Musique multiroom, lumières et automatisations.
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
-
 ---
 
 ## 📸 Aperçu
@@ -189,8 +187,7 @@ Installe ces intégrations via [HACS](https://hacs.xyz) si ce n'est pas déjà f
 
 ## ☕ Soutenir le projet
 
-Ce dashboard est gratuit et open-source.
-Si il t'a été utile, un café est toujours apprécié ! ☕
+Ce dashboard est entièrement gratuit. Si il t'a simplifié le quotidien, tu peux offrir un café — c'est toujours encourageant ! 😊
 
 [![Soutenir sur Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lookair)
 
