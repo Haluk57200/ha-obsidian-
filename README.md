@@ -4,6 +4,19 @@
 
 ---
 
+## 📋 Sommaire
+
+- [📸 Aperçu](#-aperçu)
+- [✨ Fonctionnalités](#-fonctionnalités)
+- [⚡ Installation rapide](#-installation-rapide)
+- [🔧 Installation détaillée](#-installation-détaillée)
+- [📻 Utiliser la recherche radio](#-utiliser-la-recherche-radio)
+- [❓ Problèmes fréquents](#-problèmes-fréquents)
+- [📝 Changelog](#-changelog)
+- [☕ Soutenir le projet](#-soutenir-le-projet)
+
+---
+
 ## 📸 Aperçu
 
 ### Vue principale
@@ -51,7 +64,19 @@ Portail, Garage, Mode sommeil, Film enfants, École — en un seul tap.
 
 ---
 
-## 🚀 Installation
+## ⚡ Installation rapide
+
+> Pour ceux qui connaissent déjà Home Assistant.
+
+1. Copie les fichiers `.js` du dossier `www/` dans `config/www/` de ton HA
+2. Déclare chaque fichier comme ressource : **Paramètres → Tableaux de bord → ⋮ → Ressources** → type `Module JavaScript`
+3. Importe `dashboard_ha-obsidian.yaml` dans un nouveau tableau de bord en mode YAML brut
+4. Remplace les `entity_id` génériques par les tiens
+5. Vide le cache (`Cmd+Shift+R`) et recharge
+
+---
+
+## 🔧 Installation détaillée
 
 > 💡 **Débutant ?** Suis les étapes dans l'ordre, ça prend environ 10 minutes.
 
@@ -91,7 +116,7 @@ Clique sur le bouton vert **`< > Code`** en haut de cette page → **Download ZI
 | `/local/solaire.js` | Module JavaScript |
 | `/local/systeme.js` | Module JavaScript |
 
-3. **Vide le cache** du navigateur : `Cmd+Shift+R` (Mac) ou `Ctrl+Shift+R` (PC)
+3. **Vide le cache** : `Cmd+Shift+R` (Mac) ou `Ctrl+Shift+R` (PC)
 
 ---
 
