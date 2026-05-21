@@ -138,7 +138,7 @@ Installe ces intégrations via [HACS](https://hacs.xyz) si ce n'est pas déjà f
 | À installer | Pourquoi | Lien |
 |---|---|---|
 | **Music Assistant** | Indispensable pour la musique et les radios | [music-assistant.io](https://music-assistant.io) |
-| **ha-fusion** | Thème du dashboard | [GitHub](https://github.com/matt8707/ha-fusion) |
+| **ha-fusion** | Inspiration visuelle du dashboard (optionnel) | [GitHub](https://github.com/matt8707/ha-fusion) |
 | **TiviMate Companion** | Infos TV en direct (optionnel) | HACS |
 | **TMDB** | Pochettes films/séries (optionnel) | HACS |
 | **Last.fm** | Suggestions artistes (optionnel) | HACS |
@@ -209,4 +209,4 @@ Les `entity_id` présents dans ce dépôt sont **anonymisés**. Ils ne correspon
 
 ---
 
-*Fait avec ❤️ sous Home Assistant · Thème [ha-fusion](https://github.com/matt8707/ha-fusion)*
+*Fait avec ❤️ sous Home Assistant · Inspiré du style [ha-fusion](https://github.com/matt8707/ha-fusion)*
